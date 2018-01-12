@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    *{
+      padding:0;
+    }
+    p{
+      font-family: 'Microsoft YaHei';
+    }
+    .example{
+      width:600px;
+      margin:20px 0;
+    }
+    .source-img{
+      margin: 0 auto;
+    }
+    .colors{
+      width:600px;
+    }
+    .colors .box{
+      width:120px;
+      display:inline-block;
+      text-align: center;
+    }
+    .colors .box .color{
+      width:50px;
+      height:50px;
+      border-radius:25px;
+      margin:15px auto;
+      box-shadow: 0 0 5px #aaa;
+    }
+  </style>
+</head>
+<body>
+  <script src="../dist/tiny-color-extractor.min.js"></script>
+  <script>
+    var img1 = 'http://7u2son.com1.z0.glb.clouddn.com/miku-senbon.jpg';
+    var TCE = new TinyColorExtractor(img1,function(data){
+      console.log(data)
+      addExample(data,img1)
+    });
+
+    var img2 = 'http://7u2son.com1.z0.glb.clouddn.com/hashiri.jpg';
+    var TCE2 = new TinyColorExtractor({
+      src:img2,
+      quality:10,
+      colorCount:10,
+      tolerance:30
+    },function(data){
+      console.log(data)
+      addExample(data,img2)
+    });
+
+    function addExample(data,imgurl){
+      var example = document.createElement('div');
+      var sourceImg = document.createElement('div');
+      var colors = document.createElement('div');
+
+      example.setAttribute('class','example');
+      sourceImg.setAttribute('class','source-img');
+      colors.setAttribute('class','colors');
+
+      for(var i = 0;i < data.length;i++){
+        var box = document.createElement('div');
+        var color = document.createElement('div');
+        var rgb = 'rgb('+data[i][0]+','+data[i][1]+','+data[i][2]+')';
+
+        var text = document.createElement('p');
+        text.innerHTML = data[i][0]+','+data[i][1]+','+data[i][2];
+
+        box.setAttribute('class','box');
+
+        color.setAttribute('class','color');
+        color.style.background = rgb;
+
+        colors.appendChild(box);
+        box.appendChild(color);
+        box.appendChild(text);
+      }
+
+      var img = new Image();
+      img.src = imgurl;
+      img.addEventListener('load',function(){
+        img.width = img.width > 600 ? 600 : img.width;
+        sourceImg.style.width = img.width + 'px';
+        sourceImg.appendChild(img);
+        example.appendChild(sourceImg);
+        example.appendChild(colors);
+        document.body.appendChild(example);
+      })
+    }
+  </script>
+</body>
+</html>
